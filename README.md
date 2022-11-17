@@ -11,12 +11,12 @@ Run the `unbox` command using 1 of 2 ways.
 ```sh
 # Install Truffle globally and run `truffle unbox`
 $ npm install -g truffle
-$ truffle unbox react-simple
+$ truffle unbox Diegoescalonaro/react-simple-truffle-box
 ```
 
 ```sh
 # Alternatively, run `truffle unbox` via npx
-$ npx truffle unbox react-simple
+$ npx truffle unbox Diegoescalonaro/react-simple-truffle-box
 ```
 
 Compile and migrate the smart contracts.
