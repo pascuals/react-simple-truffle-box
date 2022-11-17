@@ -4,6 +4,9 @@ import getWeb3 from "./getWeb3";
 
 import "./App.css";
 
+const CONTRACT_ADDRESS = "0x05f7B8e28ba53dB3B3200895a1EcC30adFd45083"
+const CONTRACT_ABI = require("./contracts/SimpleStorage.json").abi;
+
 class App extends Component {
   state = { storageValue: 0, web3: null, accounts: null, contract: null };
 
@@ -15,13 +18,12 @@ class App extends Component {
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
 
-      // Get the contract instance.
+      // Get the network ID
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
+
+      // Create the Smart Contract instance
+      const instance = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+      console.log(instance)
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
@@ -47,6 +49,11 @@ class App extends Component {
     // Update state with the result.
     this.setState({ storageValue: response });
   };
+
+  //TODO: set method to interact with Storage Smart Contract
+  setMethod = async () =>{}
+  //TODO: get function to interact with Storage Smart Contract
+  getMethod = async () =>{}
 
   render() {
     if (!this.state.web3) {
