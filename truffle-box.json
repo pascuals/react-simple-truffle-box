@@ -1,14 +1,14 @@
 {
   "ignore": [
-		"README.md", ".gitignore", ".github"
+		".github", ".gitattributes"
   ],
 	"commands": {
-		"Compile": "truffle compile --contracts_build_directory=./client/src/build",
-		"Migrate": "truffle migrate",
+		"Compile contracts": "truffle compile",
+		"Migrate contracts": "truffle migrate",
 		"Test contracts": "truffle test",
-		"Test dapp": "cd client && npm test",
-		"Run dev server": "cd client && npm run start",
-		"Build for production": "cd client && npm run build"
+		"Execute script for contracts": "truffle exec scripts/increment.js",
+		"Run react dev server": "cd client && npm run start",
+		"Build app for production": "cd client && npm run build"
 	},
 	"hooks": {
 		"post-unpack": "cd client && npm ci --legacy-deps"
