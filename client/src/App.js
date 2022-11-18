@@ -1,14 +1,13 @@
-import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import React, {Component} from "react";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
 
-const CONTRACT_ADDRESS = "0x05f7B8e28ba53dB3B3200895a1EcC30adFd45083"
+const CONTRACT_ADDRESS = "0x8b6594ef218DBa855e3069C71F35Ba27Ebf41056";
 const CONTRACT_ABI = require("./contracts/SimpleStorage.json").abi;
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  state = {storageValue: 0, web3: null, accounts: null, contract: null, toStoreValue: null};
 
   componentDidMount = async () => {
     try {
@@ -23,11 +22,13 @@ class App extends Component {
 
       // Create the Smart Contract instance
       const instance = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-      console.log(instance)
+      console.log(instance);
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState({web3, accounts, networkId, contract: instance, toStoreValue: null});
+
+      await this.getMethod();
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -37,23 +38,17 @@ class App extends Component {
     }
   };
 
-  runExample = async () => {
-    const { accounts, contract } = this.state;
-
-    // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
-
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
-
-    // Update state with the result.
-    this.setState({ storageValue: response });
-  };
-
   //TODO: set method to interact with Storage Smart Contract
-  setMethod = async () =>{}
+  setMethod = async () => {
+    await this.state.contract.methods.set(+this.state.toStoreValue).send({from: this.state.accounts[0]});
+    await this.getMethod();
+    console.log(this.state.storageValue);
+  };
   //TODO: get function to interact with Storage Smart Contract
-  getMethod = async () =>{}
+  getMethod = async () => {
+    const storageValue = await this.state.contract.methods.get().call();
+    this.setState({storageValue});
+  };
 
   render() {
     if (!this.state.web3) {
@@ -64,14 +59,14 @@ class App extends Component {
         <h1>Good to Go!</h1>
         <p>Your Truffle Box is installed and ready.</p>
         <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 42</strong> of App.js.
-        </p>
+        <br/><br/>
         <div>The stored value is: {this.state.storageValue}</div>
+        <br/><br/>
+        <button onClick={this.getMethod}>Get value</button>
+        &nbsp;
+        <button onClick={this.setMethod}>Update value</button>
+        <input placeholder="Insert a number" onChange={(e) => this.setState({toStoreValue: e.target.value})}/>
+        <div>{this.state.accounts[0]}</div>
       </div>
     );
   }
